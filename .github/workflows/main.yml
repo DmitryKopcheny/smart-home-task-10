@@ -1,0 +1,27 @@
+name: Arduino Build
+on: [push]
+jobs:
+ build:
+   runs-on: ubuntu-latest
+   steps:
+    - name: Checkout repository
+      uses:  actions/checkout@v4
+
+    - name: Compile sketch for project_9_steam_sensor Arduino UNO
+      uses: arduino/compile-sketches@v1
+      with:
+        fqbn: arduino:avr:uno
+        sketch-paths: |
+          project_9_steam_sensor
+        libraries: |
+          - name: "LiquidCrystal_I2C"
+        cli-compile-flags: |
+          - --export-binaries
+
+    - name: Upload compiled project_9_steam_sensor HEX artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: project_9_steam_sensor
+        path: |
+          project_9_steam_sensor/build/arduino.avr.uno/*.hex
+        retention-days: 30
